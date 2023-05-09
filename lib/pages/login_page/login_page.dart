@@ -57,51 +57,68 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Image.asset(AppStrings.loginImage, height: 150),
-                const SizedBox(height: 25),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      InputEmail(emailController: emailController),
-                      const SizedBox(height: 16),
-                      InputPassword(
-                        passwordController: passwordController,
-                        labelText: AppStrings.passwordTextLabel,
-                      ),
-                      const SizedBox(height: 12),
-                      const ForgotPasswordMessage(),
-                      const SizedBox(height: 40),
-                      SendButton(
-                        text: AppStrings.loginText,
-                        function: () {
-                          if (_formKey.currentState!.validate()) {
-                            signInWithEmailAndPassword();
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      const MyDivider(),
-                      const SizedBox(height: 30),
-                      const SocialNetworks(),
-                      const SizedBox(height: 30),
-                      Footer(
-                        message: AppStrings.dontHaveAnAccountYet,
-                        message2: AppStrings.registerHere,
-                        function: () =>
-                            Navigator.pushNamed(context, "/register"),
-                      ),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFFB86B),
+                      Color(0xFFFFAB52),
+                      Color(0xFFC3FF85),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Image.asset('assets/images/logosinfondo.png', height: 150),
+                    const SizedBox(height: 25),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          InputEmail(emailController: emailController),
+                          const SizedBox(height: 16),
+                          InputPassword(
+                            passwordController: passwordController,
+                            labelText: AppStrings.passwordTextLabel,
+                          ),
+                          const SizedBox(height: 12),
+                          const ForgotPasswordMessage(),
+                          const SizedBox(height: 40),
+                          SendButton(
+                            text: AppStrings.loginText,
+                            function: () {
+                              if (_formKey.currentState!.validate()) {
+                                signInWithEmailAndPassword();
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 30),
+                          const MyDivider(),
+                          const SizedBox(height: 30),
+                          const SocialNetworks(),
+                          const SizedBox(height: 30),
+                          Footer(
+                            message: AppStrings.dontHaveAnAccountYet,
+                            message2: AppStrings.registerHere,
+                            function: () =>
+                                Navigator.pushNamed(context, "/register"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

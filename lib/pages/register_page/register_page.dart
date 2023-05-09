@@ -59,14 +59,27 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
-            children: [
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFFB86B),
+                      Color(0xFFFFAB52),
+                      Color(0xFFC3FF85),
+                    ],
+                  ),
+                ),
+              ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10),
-                    Image.asset(AppStrings.loginImage, height: 150),
+                    Image.asset('assets/images/logosinfondo.png', height: 150),
                     const SizedBox(height: 25),
                     Form(
                       key: _formKey,

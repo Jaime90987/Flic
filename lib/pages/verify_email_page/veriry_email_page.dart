@@ -56,6 +56,19 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFFFFB86B),
+                          Color(0xFFFFAB52),
+                          Color(0xFFC3FF85),
+                        ],
+                      ),
+                    ),
+                  ),
                   const Text(
                     "Se ha enviado un correo de verificación a tu email",
                     style: TextStyle(fontSize: 24),

@@ -47,28 +47,45 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 40),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Center(child: Text("hello There")),
-                  const SizedBox(height: 40),
-                  InputEmail(emailController: emailController),
-                  const SizedBox(height: 40),
-                  SendButton(
-                    text: "Enviar",
-                    function: () {
-                      if (_formKey.currentState!.validate()) {
-                        sendPasswordResetEmail();
-                      }
-                    },
-                  )
-                ],
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFFB86B),
+                      Color(0xFFFFAB52),
+                      Color(0xFFC3FF85),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Center(child: Text("hello There")),
+                      const SizedBox(height: 40),
+                      InputEmail(emailController: emailController),
+                      const SizedBox(height: 40),
+                      SendButton(
+                        text: "Enviar",
+                        function: () {
+                          if (_formKey.currentState!.validate()) {
+                            sendPasswordResetEmail();
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
