@@ -11,7 +11,7 @@ class MyDivider extends StatelessWidget {
       children: const <Widget>[
         Expanded(
           child: Divider(
-            color: AppColors.blue,
+            color: AppColors.primary,
             thickness: .9,
           ),
         ),
@@ -23,7 +23,7 @@ class MyDivider extends StatelessWidget {
         SizedBox(width: 3),
         Expanded(
           child: Divider(
-            color: AppColors.blue,
+            color: AppColors.primary,
             thickness: .9,
           ),
         ),

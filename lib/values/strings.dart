@@ -36,7 +36,7 @@ class AppStrings {
   static const dontHaveAnAccountYet = '¿Aún no tienes una cuenta?';
   static const registerHere = 'Registrate aquí';
   static const alreadyHaveAnAccount = '¿Ya tienes una cuenta?';
-  static const loginHere = 'Inicia Sesión aquí';
+  static const loginHere = 'Inicia sesión aquí';
 
   //Registerpage
 

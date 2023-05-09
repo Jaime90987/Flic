@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proyecto_flic/pages/home_page/home_page.dart';
-import 'package:proyecto_flic/pages/widgets/send_button.dart';
+import 'package:flutter/material.dart';
+import 'package:proyecto_flic/pages/main_page.dart';
+import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
+import 'package:proyecto_flic/services/auth.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -19,7 +20,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   void initState() {
     super.initState();
 
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    isEmailVerified = Auth.user.emailVerified;
 
     if (!isEmailVerified) {
       sendVerificationEmail();
@@ -48,7 +49,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const HomePage()
+      ? const MainPage()
       : Scaffold(
           body: SafeArea(
             child: Padding(
@@ -57,14 +58,14 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    "Se ha enviado un correo de verificación a tu email",
+                    "Se ha enviado un correo de verificación a tu email.",
                     style: TextStyle(fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
                   SendButton(
                     text: "Cancelar",
-                    function: () => FirebaseAuth.instance.signOut(),
+                    function: () => Auth.signOut(),
                   ),
                 ],
               ),

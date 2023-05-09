@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proyecto_flic/pages/widgets/input_email.dart';
-import 'package:proyecto_flic/pages/widgets/send_button.dart';
+import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
+import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;

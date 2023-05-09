@@ -1,13 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proyecto_flic/pages/widgets/input_email.dart';
-import 'package:proyecto_flic/pages/widgets/input_password.dart';
-import 'package:proyecto_flic/pages/widgets/send_button.dart';
-import 'package:proyecto_flic/pages/widgets/footer.dart';
-import 'package:proyecto_flic/pages/login_page/widgets/divider.dart';
-import 'package:proyecto_flic/pages/login_page/widgets/forgot_password_message.dart';
-import 'package:proyecto_flic/pages/login_page/widgets/social_networks.dart';
+import 'package:proyecto_flic/main.dart';
+import 'package:proyecto_flic/pages/widgets/common/footer.dart';
+import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
+import 'package:proyecto_flic/pages/widgets/common/input_password.dart';
+import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
+import 'package:proyecto_flic/pages/widgets/login_page/divider.dart';
+import 'package:proyecto_flic/pages/widgets/login_page/forgot_password_message.dart';
+import 'package:proyecto_flic/pages/widgets/login_page/social_networks.dart';
+import 'package:proyecto_flic/services/auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,27 +28,6 @@ class _LoginPageState extends State<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> signInWithEmailAndPassword() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      widget.navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
-      widget.navigatorKey.currentState!.pop();
-    }
   }
 
   @override
@@ -82,7 +61,13 @@ class _LoginPageState extends State<LoginPage> {
                         text: AppStrings.loginText,
                         function: () {
                           if (_formKey.currentState!.validate()) {
-                            signInWithEmailAndPassword();
+                            Auth.signInWithEmailAndPassword(
+                              email: emailController.text.toString().trim(),
+                              password:
+                                  passwordController.text.toString().trim(),
+                              context: context,
+                              navigatorKey: navigatorKey,
+                            );
                           }
                         },
                       ),

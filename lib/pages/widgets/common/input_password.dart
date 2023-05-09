@@ -24,19 +24,17 @@ class _InputPasswordState extends State<InputPassword> {
       controller: widget.passwordController,
       keyboardType: TextInputType.visiblePassword,
       obscureText: passToogle,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: const TextStyle(color: AppColors.blue),
+        labelStyle: const TextStyle(color: AppColors.primary),
         filled: true,
-        //fillColor: colorInputFill,
         helperText: "",
         enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blue),
+          borderSide: BorderSide(color: AppColors.primary),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blue, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         errorBorder: const OutlineInputBorder(
@@ -48,7 +46,7 @@ class _InputPasswordState extends State<InputPassword> {
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         prefixIcon: const Icon(Icons.lock),
-        prefixIconColor: AppColors.blue,
+        prefixIconColor: AppColors.primary,
         suffixIcon: InkWell(
           onTap: () {
             passToogle = !passToogle;
@@ -56,7 +54,7 @@ class _InputPasswordState extends State<InputPassword> {
           },
           child: Icon(passToogle ? Icons.visibility : Icons.visibility_off),
         ),
-        suffixIconColor: AppColors.blue,
+        suffixIconColor: AppColors.primary,
       ),
       validator: (String? value) {
         if (value == null || value.trim().isEmpty) {

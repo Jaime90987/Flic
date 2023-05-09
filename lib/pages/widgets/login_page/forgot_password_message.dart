@@ -14,7 +14,7 @@ class ForgotPasswordMessage extends StatelessWidget {
           onTap: () => Navigator.of(context).pushNamed("/forgot_password"),
           child: const Text(
             AppStrings.forgotPassword,
-            style: TextStyle(color: AppColors.blue),
+            style: TextStyle(color: AppColors.primary),
           ),
         ),
       ],

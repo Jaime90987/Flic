@@ -33,7 +33,7 @@ class Footer extends StatelessWidget {
                   },
                 text: message2,
                 style: const TextStyle(
-                  color: AppColors.blue,
+                  color: AppColors.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),

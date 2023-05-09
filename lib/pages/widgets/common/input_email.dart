@@ -19,19 +19,17 @@ class InputEmail extends StatelessWidget {
     return TextFormField(
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: const InputDecoration(
         labelText: AppStrings.emailTextLabel,
-        labelStyle: TextStyle(color: AppColors.blue),
+        labelStyle: TextStyle(color: AppColors.primary),
         filled: true,
-        //fillColor: colorInputFill,
         helperText: "",
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blue),
+          borderSide: BorderSide(color: AppColors.primary),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blue, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         errorBorder: OutlineInputBorder(
@@ -43,7 +41,7 @@ class InputEmail extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         prefixIcon: Icon(Icons.email),
-        prefixIconColor: AppColors.blue,
+        prefixIconColor: AppColors.primary,
       ),
       validator: (String? value) {
         if (value == null || value.trim().isEmpty) {

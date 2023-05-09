@@ -1,31 +1,70 @@
+import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:proyecto_flic/utils/utils_class.dart';
 
 class Auth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static final user = FirebaseAuth.instance.currentUser!;
 
-  User? get currentUser => _firebaseAuth.currentUser;
-
-  Future<void> signInWithEmailAndPassword({
+  static Future<void> createUserWithEmailAndPassword({
     required String email,
     required String password,
+    required String cPassword,
+    required BuildContext context,
+    required GlobalKey<NavigatorState> navigatorKey,
   }) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    if (password != cPassword) {
+      Utils.showAlert(context, "Error", "Las contraseñas no coinciden", "OK");
+      return;
+    }
+
+    Utils.showLoadingCircle(context);
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+      navigatorKey.currentState!.pop();
+      Utils.showAlert(
+        context,
+        "Error",
+        "El correo ingresado ya está registrado.",
+        "OK",
+      );
+    }
   }
 
-  Future<void> createUserWithEmailAndPassword({
+  static Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
+    required BuildContext context,
+    required GlobalKey<NavigatorState> navigatorKey,
   }) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    Utils.showLoadingCircle(context);
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+      navigatorKey.currentState!.pop();
+      Utils.showAlert(
+        context,
+        "Error",
+        "Correo y/o contraseña incorrectos o el correo no está registrado.",
+        "OK",
+      );
+    }
   }
 
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

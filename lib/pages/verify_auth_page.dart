@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proyecto_flic/pages/login_page/login_page.dart';
-import 'package:proyecto_flic/pages/verify_email_page/veriry_email_page.dart';
+import 'package:proyecto_flic/pages/login_page.dart';
+import 'package:proyecto_flic/pages/veriry_email_page.dart';
 
-class MainPage extends StatelessWidget {
+class VerifyAuthPage extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
-  const MainPage({super.key, required this.navigatorKey});
+  const VerifyAuthPage({super.key, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
