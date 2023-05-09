@@ -5,7 +5,7 @@ class AppStrings {
 
   //LoginPage
   static const String login = "";
-  static const String loginImage = "assets/images/loginImage.jpeg";
+  static const String loginImage = "assets/images/loginImage.png";
 
   //Input Email
   static const emailTextLabel = 'Correo Electrónico';
@@ -37,8 +37,4 @@ class AppStrings {
   static const registerHere = 'Registrate aquí';
   static const alreadyHaveAnAccount = '¿Ya tienes una cuenta?';
   static const loginHere = 'Inicia sesión aquí';
-
-  //Registerpage
-
-  //HomePage
 }

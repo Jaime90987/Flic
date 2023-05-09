@@ -23,6 +23,7 @@ class InputEmail extends StatelessWidget {
         labelText: AppStrings.emailTextLabel,
         labelStyle: TextStyle(color: AppColors.primary),
         filled: true,
+        fillColor: Colors.white,
         helperText: "",
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primary),

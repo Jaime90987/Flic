@@ -28,6 +28,7 @@ class _InputPasswordState extends State<InputPassword> {
         labelText: widget.labelText,
         labelStyle: const TextStyle(color: AppColors.primary),
         filled: true,
+        fillColor: Colors.white,
         helperText: "",
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primary),

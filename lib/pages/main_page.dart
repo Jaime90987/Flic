@@ -11,7 +11,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  int _currentPage = 1;
+  int _currentPage = 0;
 
   final List<Widget> _pages = [
     const HomePage(),

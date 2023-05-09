@@ -7,11 +7,11 @@ class Auth {
   static final user = FirebaseAuth.instance.currentUser!;
 
   static Future<void> createUserWithEmailAndPassword({
+    required BuildContext context,
+    required GlobalKey<NavigatorState> navigatorKey,
     required String email,
     required String password,
     required String cPassword,
-    required BuildContext context,
-    required GlobalKey<NavigatorState> navigatorKey,
   }) async {
     if (password != cPassword) {
       Utils.showAlert(context, "Error", "Las contraseñas no coinciden", "OK");
@@ -39,10 +39,10 @@ class Auth {
   }
 
   static Future<void> signInWithEmailAndPassword({
-    required String email,
-    required String password,
     required BuildContext context,
     required GlobalKey<NavigatorState> navigatorKey,
+    required String email,
+    required String password,
   }) async {
     Utils.showLoadingCircle(context);
 
@@ -66,5 +66,22 @@ class Auth {
 
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<void> sendPasswordResetEmail({
+    required BuildContext context,
+    required GlobalKey<NavigatorState> navigatorKey,
+    required String email,
+  }) async {
+    Utils.showLoadingCircle(context);
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      log("Mail enviado");
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+      navigatorKey.currentState!.pop();
+    }
   }
 }

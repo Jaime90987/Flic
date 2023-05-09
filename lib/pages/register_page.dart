@@ -36,7 +36,20 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
-            children: [
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFFB86B),
+                      Color(0xFFFFAB52),
+                      Color(0xFFC3FF85),
+                    ],
+                  ),
+                ),
+              ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
@@ -66,14 +79,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             function: () {
                               if (_formKey.currentState!.validate()) {
                                 Auth.createUserWithEmailAndPassword(
+                                  context: context,
+                                  navigatorKey: navigatorKey,
                                   email: emailController.text.toString().trim(),
                                   password:
                                       passwordController.text.toString().trim(),
                                   cPassword: confirmPasswordController.text
                                       .toString()
                                       .trim(),
-                                  context: context,
-                                  navigatorKey: navigatorKey,
                                 );
                               }
                             },
