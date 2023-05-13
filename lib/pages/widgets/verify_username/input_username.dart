@@ -18,16 +18,6 @@ class InputUsername extends StatelessWidget {
   Widget build(BuildContext context) {
     emailController.text = text ?? emailController.text;
     bool isAvailable = false;
-
-    Future<bool> isAvailableUser(String? username) async {
-      try {
-        return await checkUsernameAvailability(username);
-      } catch (e) {
-        log('Error al verificar disponibilidad del usuario: $e');
-        return false;
-      }
-    }
-
     return TextFormField(
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
