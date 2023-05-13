@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
-import 'package:proyecto_flic/services/auth.dart';
+import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
 
 class ForgotPasswordPage extends StatefulWidget {

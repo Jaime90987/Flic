@@ -18,7 +18,11 @@ class MyDivider extends StatelessWidget {
         SizedBox(width: 3),
         Text(
           AppStrings.orLoginWith,
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
         ),
         SizedBox(width: 3),
         Expanded(

@@ -4,7 +4,7 @@ import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_password.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/pages/widgets/common/footer.dart';
-import 'package:proyecto_flic/services/auth.dart';
+import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -52,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -91,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 111),
                           Footer(
                             message: AppStrings.alreadyHaveAnAccount,
                             message2: AppStrings.loginHere,

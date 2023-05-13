@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_flic/utils/utils_class.dart';
 
+import 'firestore.dart';
+
 class Auth {
   static final user = FirebaseAuth.instance.currentUser!;
 
@@ -25,6 +27,7 @@ class Auth {
         email: email,
         password: password,
       );
+      saveMailUserInfo(user.uid, email);
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
@@ -53,14 +56,18 @@ class Auth {
       );
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
+      String message =
+          "Un error inesperado ha ocurrido. Por favor intente más tarde.";
+
+      if (e.code == "user-not-found") {
+        message = "El correo no está registrado.";
+      }
+      if (e.code == "wrong-password") {
+        message = "Correo y/o contraseña incorrectos.";
+      }
+
       navigatorKey.currentState!.pop();
-      Utils.showAlert(
-        context,
-        "Error",
-        "Correo y/o contraseña incorrectos o el correo no está registrado.",
-        "OK",
-      );
+      Utils.showAlert(context, "Error", message, "OK");
     }
   }
 

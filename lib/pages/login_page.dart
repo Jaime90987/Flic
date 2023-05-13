@@ -7,7 +7,7 @@ import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/divider.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/forgot_password_message.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/social_networks.dart';
-import 'package:proyecto_flic/services/auth.dart';
+import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
 
 class LoginPage extends StatefulWidget {
@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 30),
                           const MyDivider(),
                           const SizedBox(height: 30),
-                          const SocialNetworks(),
+                          SocialNetworks(navigatorKey: navigatorKey),
                           const SizedBox(height: 30),
                           Footer(
                             message: AppStrings.dontHaveAnAccountYet,

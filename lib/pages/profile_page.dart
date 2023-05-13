@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flic/services/auth.dart';
-import 'package:proyecto_flic/values/colors.dart';
+import 'package:proyecto_flic/services/mail_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -49,29 +48,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppColors.primary, width: 1.8),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: hasImage
-                                ? const CircleAvatar(
-                                    radius: 45,
-                                    foregroundImage: AssetImage(
-                                        "assets/images/profile_image.png"),
-                                  )
-                                : CircleAvatar(
-                                    radius: 45,
-                                    child: Text(
-                                      Auth.user.email!.substring(0, 1),
-                                      style: const TextStyle(
-                                          fontSize: 72, height: 0.9),
-                                    ),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: hasImage
+                              ? const CircleAvatar(
+                                  radius: 40,
+                                  foregroundImage: AssetImage(
+                                      "assets/images/profile_image.png"),
+                                )
+                              : CircleAvatar(
+                                  radius: 40,
+                                  child: Text(
+                                    Auth.user.email!.substring(0, 1),
+                                    style: const TextStyle(
+                                        fontSize: 72, height: 0.9),
                                   ),
-                          ),
+                                ),
                         ),
                       ),
                       Container(

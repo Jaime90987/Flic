@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto_flic/pages/main_page.dart';
+import 'package:proyecto_flic/pages/verify_username_page.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
-import 'package:proyecto_flic/services/auth.dart';
+import 'package:proyecto_flic/services/mail_auth.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -49,7 +49,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const MainPage()
+      ? const VerifyUsernamePage()
       : Scaffold(
           body: SafeArea(
             child: Stack(
