@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 0),
             child: IconButton(
-              icon: const Icon(Icons.logout),
+              icon: const Icon(Icons.menu),
               onPressed: () => Auth.signOut(),
               iconSize: 30,
             ),
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             _indicator("34", "Following"),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

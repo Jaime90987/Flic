@@ -15,7 +15,7 @@ class SendButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () => function(),
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(310, 48),
+        minimumSize: Size(MediaQuery.of(context).size.width, 48),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 3,

@@ -34,25 +34,24 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF87CEFA),
-                      Color(0xFF6FD5E3),
-                      Color(0xFF7CFDE9),
-                    ],
-                  ),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF87CEFA),
+                    Color(0xFF6FD5E3),
+                    Color(0xFF7CFDE9),
+                  ],
                 ),
               ),
-              Container(
+            ),
+            SingleChildScrollView(
+              child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -98,14 +97,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             message2: AppStrings.loginHere,
                             function: () => Navigator.pop(context),
                           ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

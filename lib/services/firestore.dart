@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -34,9 +33,9 @@ Future<Object> getUserinfo(String uid) async {
   return documentSnapshot;
 }
 
-Future<String?> getUsername(String uid) async {
+Future<String> getUsername(String uid) async {
   DocumentSnapshot userDoc = await db.collection('users').doc(uid).get();
-  return userDoc.get('username');
+  return userDoc.get('username').toString();
 }
 
 Future<bool> checkUsernameAvailability(String? username) async {
