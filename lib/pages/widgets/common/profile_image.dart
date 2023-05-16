@@ -5,9 +5,15 @@ import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
 class ProfileImage extends StatelessWidget {
+  final String image;
   final double width;
   final double height;
-  const ProfileImage({super.key, required this.width, required this.height});
+  const ProfileImage({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.image,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class ProfileImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(50),
       child: context.read<UserProvider>().user.photoURL.isNotEmpty
           ? CachedNetworkImage(
-              imageUrl: context.read<UserProvider>().user.photoURL,
+              imageUrl: image,
               fit: BoxFit.cover,
               width: width,
               height: height,

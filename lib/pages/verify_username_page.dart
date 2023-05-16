@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_flic/models/user.dart';
 import 'package:proyecto_flic/pages/main_page.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
@@ -31,10 +30,13 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
 
   void createUserModel() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    UserModel user = await getUserinfo(Auth.user.uid);
-    userProvider.setUser(user);
-    _isLoading = false;
-    setState(() {});
+    await getUserinfo(Auth.user.uid).then(
+      (user) => {
+        userProvider.setUser(user),
+        _isLoading = false,
+        setState(() {}),
+      },
+    );
   }
 
   @override

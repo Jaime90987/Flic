@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.2.3
   provider: ^6.0.5
   image_size_getter: ^2.1.2
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

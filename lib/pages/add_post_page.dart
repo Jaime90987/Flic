@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/firestore.dart';
@@ -11,8 +12,6 @@ import 'package:proyecto_flic/services/select_image.dart';
 import 'package:proyecto_flic/services/storage.dart';
 import 'package:proyecto_flic/utils/utils_class.dart';
 import 'package:proyecto_flic/values/colors.dart';
-
-import '../main.dart';
 
 class AddPostPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -37,6 +36,7 @@ class _AddPostPageState extends State<AddPostPage> {
   @override
   Widget build(BuildContext context) {
     final username = context.read<UserProvider>().user.username;
+    final photoURL = context.read<UserProvider>().user.photoURL;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -61,12 +61,13 @@ class _AddPostPageState extends State<AddPostPage> {
                 if (messageController.text.toString().isEmpty &&
                     imageToUpload == null) {
                   Utils.showAlert(
-                      context,
-                      navigatorKey,
-                      "Error al crear la publicación",
-                      "La publicación debe contener al menos un mensaje o una imagen.",
-                      "OK",
-                      false);
+                    context,
+                    navigatorKey,
+                    "Error al crear la publicación",
+                    "La publicación debe contener al menos un mensaje o una imagen.",
+                    "OK",
+                    false,
+                  );
                   return;
                 }
                 if (imageToUpload != null) {
@@ -76,12 +77,14 @@ class _AddPostPageState extends State<AddPostPage> {
                 await addPost(
                   Auth.user.uid,
                   username,
+                  photoURL,
                   messageController.text.toString().trim(),
                   imageToUpload != null ? getUrl() : "",
                 );
                 imageToUpload = null;
                 messageController.text = "";
                 setState(() {});
+                Navigator.pop(context); //TODO
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -106,7 +109,8 @@ class _AddPostPageState extends State<AddPostPage> {
                 children: <Widget>[
                   Expanded(
                     child: Row(children: [
-                      const ProfileImage(
+                      ProfileImage(
+                        image: context.read<UserProvider>().user.photoURL,
                         width: 40,
                         height: 40,
                       ),

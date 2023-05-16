@@ -62,14 +62,16 @@ Future<bool> checkUsernameAvailability(String? username) async {
 Future<void> addPost(
   String uid,
   String username,
+  String photoURL,
   String? mesasage,
   String? image,
 ) async {
   await db.collection("posts").doc().set({
     "uid": uid,
     "username": username,
+    "photoURL": photoURL,
     "message": mesasage,
-    "iamges": image,
+    "image": image,
     "date": DateTime.now(),
   });
 }
