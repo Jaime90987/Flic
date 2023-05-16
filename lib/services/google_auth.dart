@@ -22,8 +22,12 @@ class GoogleAuth {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      saveGoogleUserInfo(userCredential.user!.uid, userCredential.user!.email,
-          userCredential.user!.displayName, userCredential.user!.photoURL);
+      saveGoogleUserInfo(
+        userCredential.user!.uid,
+        userCredential.user!.email,
+        userCredential.user!.displayName,
+        userCredential.user!.photoURL,
+      );
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());

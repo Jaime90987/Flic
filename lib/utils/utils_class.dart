@@ -1,9 +1,14 @@
-
 import 'package:flutter/material.dart';
 
 class Utils {
-  static showAlert(BuildContext context, String title, String messageText,
-      String actionText) {
+  static showAlert(
+    BuildContext context,
+    GlobalKey<NavigatorState> navigatorKey,
+    String title,
+    String messageText,
+    String actionText,
+    bool isForgotPassoword,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -11,7 +16,9 @@ class Utils {
         content: Text(messageText),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => !isForgotPassoword
+                ? Navigator.pop(context)
+                : navigatorKey.currentState!.popUntil((route) => route.isFirst),
             child: Text(actionText),
           ),
         ],

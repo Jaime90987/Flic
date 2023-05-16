@@ -1,8 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flic/models/user.dart';
 import 'package:proyecto_flic/pages/main_page.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
+import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/colors.dart';
@@ -17,20 +18,21 @@ class VerifyUsernamePage extends StatefulWidget {
 class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
+
   bool _usernameAvailable = true;
-  String _username = "";
   bool _isLoading = true;
 
   void _validateUsername(String? value) async {
     if (value != null && value.isNotEmpty) {
-      bool isAvailable = await checkUsernameAvailability(value);
-      _usernameAvailable = isAvailable;
+      _usernameAvailable = await checkUsernameAvailability(value);
       setState(() {});
     }
   }
 
-  Future<void> _checkUsername() async {
-    _username = await getUsername(Auth.user.uid);
+  void createUserModel() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    UserModel user = await getUserinfo(Auth.user.uid);
+    userProvider.setUser(user);
     _isLoading = false;
     setState(() {});
   }
@@ -38,14 +40,14 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
   @override
   void initState() {
     super.initState();
-    _checkUsername();
+    createUserModel();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    } else if (_username != "") {
+    } else if (context.read<UserProvider>().user.username != "") {
       return const MainPage();
     }
     return Scaffold(
@@ -81,7 +83,7 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
                 const SizedBox(height: 25),
                 TextFormField(
                   controller: userNameController,
-                  keyboardType: TextInputType.name,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     labelText: "Nombre de Usuario",
                     labelStyle: TextStyle(color: AppColors.primary),
@@ -114,7 +116,6 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
                   validator: (value) {
                     if (value.toString().trim() == "" ||
                         value.toString().trim().isEmpty) {
-                      log("'${value.toString().trim()}'");
                       return 'Por favor ingrese un nombre de usuario';
                     } else if (!_usernameAvailable) {
                       return 'Este nombre de usuario ya está en uso';

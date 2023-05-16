@@ -1,9 +1,8 @@
 import 'dart:developer';
+import 'firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_flic/utils/utils_class.dart';
-
-import 'firestore.dart';
 
 class Auth {
   static final user = FirebaseAuth.instance.currentUser!;
@@ -16,7 +15,14 @@ class Auth {
     required String cPassword,
   }) async {
     if (password != cPassword) {
-      Utils.showAlert(context, "Error", "Las contraseñas no coinciden", "OK");
+      Utils.showAlert(
+        context,
+        navigatorKey,
+        "Error",
+        "Las contraseñas no coinciden",
+        "OK",
+        false,
+      );
       return;
     }
 
@@ -34,9 +40,11 @@ class Auth {
       navigatorKey.currentState!.pop();
       Utils.showAlert(
         context,
+        navigatorKey,
         "Error",
         "El correo ingresado ya está registrado.",
         "OK",
+        false,
       );
     }
   }
@@ -67,7 +75,7 @@ class Auth {
       }
 
       navigatorKey.currentState!.pop();
-      Utils.showAlert(context, "Error", message, "OK");
+      Utils.showAlert(context, navigatorKey, "Error", message, "OK", false);
     }
   }
 
@@ -80,12 +88,8 @@ class Auth {
     required GlobalKey<NavigatorState> navigatorKey,
     required String email,
   }) async {
-    Utils.showLoadingCircle(context);
-
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      log("Mail enviado");
-      navigatorKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
       navigatorKey.currentState!.pop();
