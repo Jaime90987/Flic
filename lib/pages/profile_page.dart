@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -35,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SafeArea(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 18),
+          margin: const EdgeInsets.symmetric(horizontal: 0),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -71,11 +73,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            _indicator("0", "Posts"),
+                            _indicator("0", "Publicaciones"),
                             const SizedBox(width: 30),
-                            _indicator("10", "Followers"),
+                            _indicator("10", "Seguidores"),
                             const SizedBox(width: 30),
-                            _indicator("34", "Following"),
+                            _indicator("34", "Siguiendo"),
                           ],
                         ),
                       ),
@@ -85,11 +87,41 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Expanded(
                 flex: 11,
-                child: ListView.builder(
-                  itemCount: 100,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Text("Post ${index + 1}");
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .where('uid', isEqualTo: Auth.user.uid) // Solo se muestran los posts del usuario que ha iniciado sesión
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.active) {
+                      final posts = snapshot.data!.docs;
+                      return ListView.builder(
+                          itemCount: posts.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final currentPost = posts[index];
+                            return Card(
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      currentPost['iamges']),
+                                ),
+                                title: Text(currentPost['username']),
+                                subtitle: Column(
+                                  children: <Widget>[
+                                    const SizedBox(height: 10),
+                                    Text(currentPost['message']),
+                                    const SizedBox(height: 10),
+                                    Text("${DateTime.fromMillisecondsSinceEpoch(currentPost['date'].millisecondsSinceEpoch)}",),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    }
+                    return const Center(child: CircularProgressIndicator());
                   },
                 ),
               )
