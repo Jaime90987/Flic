@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,14 +23,18 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         title: const Text(
           "FLIC",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 23,
+          ),
         ),
         elevation: 0,
         actions: [
           Container(
             margin: const EdgeInsets.fromLTRB(0, 12, 15, 12),
             child: ProfileImage(
-              image: context.read<UserProvider>().user.photoURL,
+              image: context.read<UserProvider>().user.photoURL ?? "",
               width: 33,
               height: 33,
             ),
@@ -39,13 +45,38 @@ class _HomePageState extends State<HomePage> {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('posts')
-              .orderBy("date", descending: true)
+              .orderBy("timestamp", descending: true)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.active) {
               final posts = snapshot.data!.docs;
+
+              if (posts.isEmpty) {
+                return Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(50),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Image.asset("assets/images/no_posts_yet.png"),
+                      ),
+                      const Text(
+                        "Aún no hay ninguna publicación en Flic.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                );
+              }
+
               return ListView.builder(
                 itemCount: posts.length,
                 shrinkWrap: true,
@@ -74,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Text(
-                              getFormatedDate(currentPost["date"]),
+                              getFormattedDate(currentPost["timestamp"]),
                               textAlign: TextAlign.right,
                             ),
                           ],
@@ -106,8 +137,16 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               );
+            } else if (snapshot.hasError) {
+              log(snapshot.error.toString());
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center();
+            } else if (!snapshot.hasData) {
+              return const Text('No data');
+            } else {
+              return const Center(child: CircularProgressIndicator());
             }
-            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

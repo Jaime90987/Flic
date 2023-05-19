@@ -10,24 +10,29 @@ class GoogleAuth {
     required BuildContext context,
     required GlobalKey<NavigatorState> navigatorKey,
   }) async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
-    Utils.showLoadingCircle(context);
-    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
     try {
+      Utils.showLoadingCircle(context);
+      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+      OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+
       saveGoogleUserInfo(
         userCredential.user!.uid,
-        userCredential.user!.email,
-        userCredential.user!.displayName,
-        userCredential.user!.photoURL,
+        userCredential.user!.email!,
+        userCredential.user!.displayName!,
+        userCredential.user!.photoURL!,
       );
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       log(e.message.toString());
@@ -35,8 +40,9 @@ class GoogleAuth {
     }
   }
 
-  static void signOutGoogle() async {
+  static Future<void> signOutGoogle() async {
     GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
   }
 }

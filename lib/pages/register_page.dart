@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                           ),
-                          const SizedBox(height: 111),
+                          const SizedBox(height: 85),
                           Footer(
                             message: AppStrings.alreadyHaveAnAccount,
                             message2: AppStrings.loginHere,

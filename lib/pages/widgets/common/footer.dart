@@ -22,7 +22,7 @@ class Footer extends StatelessWidget {
           text: TextSpan(
             text: message,
             style: const TextStyle(
-              color: Colors.grey,
+              color: Colors.black54,
             ),
             children: [
               const WidgetSpan(child: SizedBox(width: 10)),

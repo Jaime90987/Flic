@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
@@ -30,7 +31,23 @@ class _AddPostPageState extends State<AddPostPage> {
   @override
   void dispose() {
     messageController.dispose();
+    imageToUpload = null;
     super.dispose();
+  }
+
+  void _showFullScreenImage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black54,
+          ),
+          backgroundColor: Colors.black54,
+          body: PhotoView(imageProvider: FileImage(imageToUpload!)),
+        ),
+      ),
+    );
   }
 
   @override
@@ -58,6 +75,9 @@ class _AddPostPageState extends State<AddPostPage> {
             child: ElevatedButton(
               onPressed: () async {
                 FocusScope.of(context).unfocus();
+
+                Utils.showLoadingCircle(context);
+
                 if (messageController.text.toString().isEmpty &&
                     imageToUpload == null) {
                   Utils.showAlert(
@@ -70,21 +90,27 @@ class _AddPostPageState extends State<AddPostPage> {
                   );
                   return;
                 }
+
                 if (imageToUpload != null) {
-                  final uploaded = await uploadImage(imageToUpload!);
-                  if (!uploaded) log("Ocurrió un error al subir la imagen");
+                  bool uploaded = await uploadImage(imageToUpload!);
+                  if (!uploaded) {
+                    log("Ocurrió un error al subir la imagen");
+                    return;
+                  }
                 }
+
                 await addPost(
                   Auth.user.uid,
-                  username,
-                  photoURL,
+                  username.toString(),
+                  photoURL.toString(),
                   messageController.text.toString().trim(),
                   imageToUpload != null ? getUrl() : "",
                 );
+
                 imageToUpload = null;
                 messageController.text = "";
                 setState(() {});
-                Navigator.pop(context); //TODO
+                navigatorKey.currentState!.popUntil((route) => route.isFirst);
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -101,7 +127,7 @@ class _AddPostPageState extends State<AddPostPage> {
       body: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.fromLTRB(18, 20, 18, 20),
+          margin: const EdgeInsets.fromLTRB(18, 10, 18, 20),
           child: Column(
             children: <Widget>[
               Row(
@@ -110,7 +136,11 @@ class _AddPostPageState extends State<AddPostPage> {
                   Expanded(
                     child: Row(children: [
                       ProfileImage(
-                        image: context.read<UserProvider>().user.photoURL,
+                        image: context
+                            .read<UserProvider>()
+                            .user
+                            .photoURL
+                            .toString(),
                         width: 40,
                         height: 40,
                       ),
@@ -118,7 +148,7 @@ class _AddPostPageState extends State<AddPostPage> {
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
-                            username,
+                            username.toString(),
                             maxLines: 1,
                             style: const TextStyle(
                               fontSize: 18,
@@ -170,32 +200,35 @@ class _AddPostPageState extends State<AddPostPage> {
                   width: MediaQuery.of(context).size.width * width,
                   height: MediaQuery.of(context).size.width * height,
                   child: imageToUpload != null
-                      ? Stack(
-                          fit: StackFit.expand,
-                          children: <Widget>[
-                            Image.file(
-                              imageToUpload!,
-                              fit: BoxFit.cover,
-                            ),
-                            Container(
-                              alignment: Alignment.topRight,
-                              padding: const EdgeInsets.all(5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  imageToUpload = null;
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: const Color(0xDBF6F4F4),
+                      ? GestureDetector(
+                          onTap: _showFullScreenImage,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: <Widget>[
+                              Image.file(
+                                imageToUpload!,
+                                fit: BoxFit.cover,
+                              ),
+                              Container(
+                                alignment: Alignment.topRight,
+                                padding: const EdgeInsets.all(5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    imageToUpload = null;
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: const Color(0xDBF6F4F4),
+                                    ),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/cancel.svg"),
                                   ),
-                                  child: SvgPicture.asset(
-                                      "assets/icons/cancel.svg"),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         )
                       : null,
                 ),

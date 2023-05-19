@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flic/models/user.dart';
 import 'package:proyecto_flic/pages/home_page.dart';
 import 'package:proyecto_flic/pages/profile_page.dart';
+import 'package:proyecto_flic/pages/search_page.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,7 +17,7 @@ class MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    // const SearchPage(),
+    const SearchPage(),
     const ProfilePage(),
   ];
 
@@ -28,13 +30,18 @@ class MainPageState extends State<MainPage> {
           _currentPage = index;
           setState(() {});
         },
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         currentIndex: _currentPage,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: const Color(0xFFBA9FEE),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-          // BottomNavigationBarItem(icon: Icon(Icons.search), label: "Buscar"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home, size: 26), label: "Inicio"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search, size: 26), label: "Buscar"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person, size: 26), label: "Perfil"),
         ],
       ),
     );

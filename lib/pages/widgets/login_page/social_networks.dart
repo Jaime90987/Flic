@@ -29,7 +29,7 @@ class SocialNetworks extends StatelessWidget {
         );
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white54,
+        backgroundColor: Colors.white,
         padding: const EdgeInsets.all(8),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),

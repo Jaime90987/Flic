@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_flic/models/user.dart';
 
@@ -14,19 +15,24 @@ Future<void> saveMailUserInfo(String? uid, String? email) async {
 }
 
 Future<void> saveGoogleUserInfo(
-  String? uid,
-  String? email,
-  String? name,
-  String? photoURL,
+  String uid,
+  String email,
+  String name,
+  String photoURL,
 ) async {
-  await db.collection("users").doc(uid).set({
-    "uid": uid,
-    "username": "",
-    "email": email,
-    "name": name,
-    "photoURL": photoURL,
-    "signInMethod": "google",
-  });
+  final document =
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+  if (!document.exists) {
+    await db.collection("users").doc(uid).set({
+      "uid": uid,
+      "username": "",
+      "email": email,
+      "name": name,
+      "photoURL": photoURL,
+      "signInMethod": "google",
+    });
+  }
 }
 
 Future<void> saveUsername(String? uid, String? username) async {
@@ -36,21 +42,41 @@ Future<void> saveUsername(String? uid, String? username) async {
 }
 
 Future<UserModel> getUserinfo(String uid) async {
-  DocumentReference userDoc = db.collection("users").doc(uid);
-  DocumentSnapshot documentSnapshot = await userDoc.get();
+  DocumentSnapshot snapshot = await db.collection("users").doc(uid).get();
 
-  Map<String, dynamic> userData =
-      documentSnapshot.data() as Map<String, dynamic>;
+  if (snapshot.exists && snapshot.data() != null) {
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    UserModel user = UserModel(
+      uid: data['uid'] as String,
+      username: data['username'] as String,
+      email: data['email'] as String,
+      photoURL: data['photoURL'] as String,
+      signInMethod: data['signInMethod'] as String,
+    );
 
-  UserModel user = UserModel(
-    uid: uid,
-    username: userData["username"],
-    email: userData["email"],
-    photoURL: userData["photoURL"],
-    signInMethod: userData["signInMethod"],
-  );
+    return user;
+  } else {
+    throw StateError('No se encontró el documento o no se cargaron los datos');
+  }
+}
 
-  return user;
+Future<String?> getUsernameFromFirestore(String uid) async {
+  try {
+    DocumentSnapshot documentSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      String? username = data['username'] as String?;
+      return username;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    log('Error retrieving username from Firestore: $e');
+    return null;
+  }
 }
 
 Future<bool> checkUsernameAvailability(String? username) async {
@@ -72,6 +98,6 @@ Future<void> addPost(
     "photoURL": photoURL,
     "message": mesasage,
     "image": image,
-    "date": DateTime.now(),
+    "timestamp": Timestamp.now(),
   });
 }

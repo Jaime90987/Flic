@@ -1,11 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_flic/models/user.dart';
+import 'package:proyecto_flic/pages/insert_username_page.dart';
 import 'package:proyecto_flic/pages/main_page.dart';
-import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
-import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
-import 'package:proyecto_flic/values/colors.dart';
 
 class VerifyUsernamePage extends StatefulWidget {
   const VerifyUsernamePage({super.key});
@@ -15,133 +15,43 @@ class VerifyUsernamePage extends StatefulWidget {
 }
 
 class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController userNameController = TextEditingController();
-
-  bool _usernameAvailable = true;
-  bool _isLoading = true;
-
-  void _validateUsername(String? value) async {
-    if (value != null && value.isNotEmpty) {
-      _usernameAvailable = await checkUsernameAvailability(value);
-      setState(() {});
-    }
-  }
-
-  void createUserModel() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    await getUserinfo(Auth.user.uid).then(
-      (user) => {
-        userProvider.setUser(user),
-        _isLoading = false,
-        setState(() {}),
-      },
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    createUserModel();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    } else if (context.read<UserProvider>().user.username != "") {
-      return const MainPage();
-    }
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "¿Quién eres?",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Por favor escribe un nombre de usuario para identificarte en Flic.",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                TextFormField(
-                  controller: userNameController,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    labelText: "Nombre de Usuario",
-                    labelStyle: TextStyle(color: AppColors.primary),
-                    filled: true,
-                    fillColor: Colors.white,
-                    helperText: "",
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primary),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: AppColors.primary, width: 1.5),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    prefixIcon: Icon(Icons.person),
-                    prefixIconColor: AppColors.primary,
-                  ),
-                  onChanged: (value) {
-                    _validateUsername(value.toString().trim());
-                  },
-                  validator: (value) {
-                    if (value.toString().trim() == "" ||
-                        value.toString().trim().isEmpty) {
-                      return 'Por favor ingrese un nombre de usuario';
-                    } else if (!_usernameAvailable) {
-                      return 'Este nombre de usuario ya está en uso';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 40),
-                SendButton(
-                  text: "Aceptar",
-                  function: () {
-                    if (_formKey.currentState!.validate()) {
-                      saveUsername(
-                        Auth.user.uid,
-                        userNameController.text.trim(),
-                      );
-                      Navigator.pushReplacementNamed(context, "/main");
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(Auth.user.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: Text("Algo salio mal..."));
+          } else if (snapshot.hasData) {
+            final data = snapshot.data!.data() as Map<String, dynamic>;
+            UserModel user = UserModel();
+
+            UserProvider userProvider = Provider.of(context, listen: true);
+
+            user.setUid(data['uid']);
+            user.setEmail(data['email']);
+            user.setPhotoURL(data['photoURL']);
+            user.setSignInMethod(data['signInMethod']);
+
+            userProvider.setUser(user);
+
+            if (data.containsKey("username") &&
+                data['username'].toString().isNotEmpty) {
+              user.setUsername(data['username']);
+              return const MainPage();
+            } else {
+              return const InsertUsernamePage();
+            }
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
@@ -22,9 +23,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          context.read<UserProvider>().user.username,
+          context.read<UserProvider>().user.username.toString(),
           style: const TextStyle(
-            fontSize: 22,
+            fontSize: 23,
             fontWeight: FontWeight.bold,
             overflow: TextOverflow.ellipsis,
           ),
@@ -50,64 +51,83 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                        child: ProfileImage(
-                          image: context.read<UserProvider>().user.photoURL,
-                          width: 77,
-                          height: 77,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(10, 10, 20, 0),
-                        child: Row(
-                          children: <Widget>[
-                            _indicator(postsNumber.toString(), "Publicaciones"),
-                            const SizedBox(width: 10),
-                            _indicator("0", "Seguidores"),
-                            const SizedBox(width: 10),
-                            _indicator("0", "Siguiendo"),
-                          ],
-                        ),
-                      ),
-                    ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                    child: ProfileImage(
+                      image:
+                          context.read<UserProvider>().user.photoURL.toString(),
+                      width: 77,
+                      height: 77,
+                    ),
                   ),
-                ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 10, 25, 0),
+                    child: Row(
+                      children: <Widget>[
+                        _indicator(postsNumber.toString(), "Publicaciones"),
+                        const SizedBox(width: 10),
+                        _indicator("0", "Seguidores"),
+                        const SizedBox(width: 10),
+                        _indicator("0", "Siguiendo"),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              flex: 12,
-              child: StreamBuilder(
+              StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('posts')
                     .where('uid', isEqualTo: Auth.user.uid)
-                    //.orderBy("date", descending: true)
+                    .orderBy("timestamp", descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.active) {
                     final posts = snapshot.data!.docs;
+
+                    if (posts.isEmpty) {
+                      return Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.all(50),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child:
+                                  Image.asset("assets/images/no_posts_yet.png"),
+                            ),
+                            const Text(
+                              "Aún no has hecho ninguna publicación.",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      );
+                    }
+
                     return ListView.builder(
                       itemCount: posts.length,
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final currentPost = posts[index];
                         return Card(
                           child: ListTile(
                             leading: ProfileImage(
-                              image: context.read<UserProvider>().user.photoURL,
+                              image: currentPost["photoURL"],
                               width: 40,
                               height: 40,
                             ),
@@ -128,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   Text(
-                                    getFormatedDate(currentPost["date"]),
+                                    getFormattedDate(currentPost["timestamp"]),
                                     textAlign: TextAlign.right,
                                   ),
                                 ],
@@ -162,12 +182,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                     );
+                  } else if (snapshot.hasError) {
+                    log(snapshot.error.toString());
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center();
+                  } else if (!snapshot.hasData) {
+                    return const Text('No data');
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
                   }
-                  return const Center(child: CircularProgressIndicator());
                 },
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

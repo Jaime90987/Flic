@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/footer.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
@@ -6,9 +7,10 @@ import 'package:proyecto_flic/pages/widgets/common/input_password.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/divider.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/forgot_password_message.dart';
-import 'package:proyecto_flic/pages/widgets/login_page/social_networks.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
+
+import '../services/google_auth.dart';
 
 class LoginPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -89,8 +91,45 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 30),
                           const MyDivider(),
                           const SizedBox(height: 30),
-                          SocialNetworks(navigatorKey: navigatorKey),
-                          const SizedBox(height: 30),
+                          // SocialNetworks(navigatorKey: navigatorKey),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await GoogleAuth.registerWithGoogle(
+                                context: context,
+                                navigatorKey: navigatorKey,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize:
+                                  Size(MediaQuery.of(context).size.width, 48),
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.all(8),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  AppStrings.socialImage1,
+                                  height: 32,
+                                  semanticsLabel: AppStrings.socialText1,
+                                ),
+                                const SizedBox(width: 15),
+                                const Text(
+                                  "Ingresar con Google",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 22),
                           Footer(
                             message: AppStrings.dontHaveAnAccountYet,
                             message2: AppStrings.registerHere,

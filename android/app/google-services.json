@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:162617228519:android:8f7189e1e3e97ff82bb642",
-        "android_client_info": {
-          "package_name": "com.example.flic"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "162617228519-hbe96df5kl502jof9cbocinlke9uorbf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAJgg8ep44yesHUCK6EFLXZaKufbLP9P4w"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "162617228519-hbe96df5kl502jof9cbocinlke9uorbf.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:162617228519:android:ec46427a6cea87032bb642",
         "android_client_info": {
           "package_name": "com.example.proyecto_flic"
@@ -51,7 +22,7 @@
           }
         },
         {
-          "client_id": "162617228519-hbe96df5kl502jof9cbocinlke9uorbf.apps.googleusercontent.com",
+          "client_id": "162617228519-u7bkkejn97m54bqilhfr03douvt49qdr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
