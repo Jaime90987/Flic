@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flic/models/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:proyecto_flic/pages/home_page.dart';
 import 'package:proyecto_flic/pages/profile_page.dart';
 import 'package:proyecto_flic/pages/search_page.dart';
@@ -30,6 +30,7 @@ class MainPageState extends State<MainPage> {
           _currentPage = index;
           setState(() {});
         },
+        type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         currentIndex: _currentPage,
@@ -37,11 +38,18 @@ class MainPageState extends State<MainPage> {
         unselectedItemColor: const Color(0xFFBA9FEE),
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home, size: 26), label: "Inicio"),
+            icon: FaIcon(FontAwesomeIcons.house),
+            activeIcon: FaIcon(FontAwesomeIcons.house),
+            label: "Inicio",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search, size: 26), label: "Buscar"),
+            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+            label: "Buscar",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 26), label: "Perfil"),
+            icon: FaIcon(FontAwesomeIcons.user),
+            label: "Perfil",
+          ),
         ],
       ),
     );

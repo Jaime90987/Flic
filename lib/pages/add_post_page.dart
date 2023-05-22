@@ -40,6 +40,7 @@ class _AddPostPageState extends State<AddPostPage> {
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.black54,
           ),

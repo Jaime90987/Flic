@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
               final posts = snapshot.data!.docs;
 
               if (posts.isEmpty) {
@@ -128,24 +127,31 @@ class _HomePageState extends State<HomePage> {
                           if (currentPost['image'].toString() != "")
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.network(currentPost['image']),
+                              child: CachedNetworkImage(
+                                maxHeightDiskCache: 2000,
+                                imageUrl: currentPost['image'],
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey,
+                                  height: 250,
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
-                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
                   );
                 },
               );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               log(snapshot.error.toString());
               return Text('Error: ${snapshot.error}');
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center();
-            } else if (!snapshot.hasData) {
-              return const Text('No data');
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return const Text('No data');
             }
           },
         ),

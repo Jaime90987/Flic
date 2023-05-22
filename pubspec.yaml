@@ -47,6 +47,7 @@ dependencies:
   image_size_getter: ^2.1.2
   intl: ^0.18.1
   photo_view: ^0.14.0
+  font_awesome_flutter: ^10.4.0
 
 dev_dependencies:
   flutter_test:

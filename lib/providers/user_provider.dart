@@ -8,7 +8,7 @@ class UserProvider with ChangeNotifier {
 
   void setUser(UserModel user) {
     _user = user;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void setUsername(String username) {

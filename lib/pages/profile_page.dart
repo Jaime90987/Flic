@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_flic/pages/edit_profile_page.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
@@ -34,20 +36,49 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         actions: [
-          GestureDetector(
-            child: Container(
-              margin: const EdgeInsets.only(right: 12),
-              child: const Icon(Icons.settings, size: 30),
-            ),
-            onTap: () {
-              if (context.read<UserProvider>().user.signInMethod.toString() ==
-                  "google") {
-                GoogleAuth.signOutGoogle();
-              } else {
-                Auth.signOut();
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == "edit") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfilePage(),
+                  ),
+                );
+              } else if (value == "logout") {
+                if (context.read<UserProvider>().user.signInMethod.toString() ==
+                    "google") {
+                  GoogleAuth.signOutGoogle();
+                } else {
+                  Auth.signOut();
+                }
               }
             },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: "edit",
+                child: Text("Editar perfil"),
+              ),
+              const PopupMenuItem(
+                value: "logout",
+                child: Text("Cerrar sesión"),
+              ),
+            ],
           ),
+          // GestureDetector(
+          //   child: Container(
+          //     margin: const EdgeInsets.only(right: 12),
+          //     child: const Icon(Icons.settings, size: 30),
+          //   ),
+          //   onTap: () {
+          //     if (context.read<UserProvider>().user.signInMethod.toString() ==
+          //         "google") {
+          //       GoogleAuth.signOutGoogle();
+          //     } else {
+          //       Auth.signOut();
+          //     }
+          //   },
+          // ),
         ],
       ),
       body: SafeArea(
@@ -89,8 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
                     final posts = snapshot.data!.docs;
 
                     if (posts.isEmpty) {
@@ -173,7 +203,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 if (currentPost['image'].toString() != "")
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(currentPost['image']),
+                                    child: CachedNetworkImage(
+                                      imageUrl: currentPost['image'],
+                                      placeholder: (context, url) => Container(
+                                        color: Colors.grey,
+                                        height: 250,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
                                   ),
                                 const SizedBox(height: 10),
                               ],
@@ -182,16 +222,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                     );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Container(
+                      margin: const EdgeInsets.only(top: 200),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
                   } else if (snapshot.hasError) {
                     log(snapshot.error.toString());
                     return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center();
-                  } else if (!snapshot.hasData) {
-                    return const Text('No data');
                   } else {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Text('No data');
                   }
                 },
               )

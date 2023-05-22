@@ -31,9 +31,8 @@ class ProfileImage extends StatelessWidget {
               height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: AppColors.primary,
               ),
-              child: const Icon(Icons.person, color: Colors.white),
+              child: Image.asset("assets/images/avatar-none.png"),
             ),
     );
   }

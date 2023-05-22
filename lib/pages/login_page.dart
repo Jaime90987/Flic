@@ -7,10 +7,9 @@ import 'package:proyecto_flic/pages/widgets/common/input_password.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/divider.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/forgot_password_message.dart';
+import 'package:proyecto_flic/services/google_auth.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/values/strings.dart';
-
-import '../services/google_auth.dart';
 
 class LoginPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -91,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 30),
                           const MyDivider(),
                           const SizedBox(height: 30),
-                          // SocialNetworks(navigatorKey: navigatorKey),
                           ElevatedButton(
                             onPressed: () async {
                               await GoogleAuth.registerWithGoogle(

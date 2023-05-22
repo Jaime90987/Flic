@@ -30,24 +30,27 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
           } else if (snapshot.hasError) {
             return const Center(child: Text("Algo salio mal..."));
           } else if (snapshot.hasData) {
-            final data = snapshot.data!.data() as Map<String, dynamic>;
-            UserModel user = UserModel();
+            final data = snapshot.data!.data() as Map<String, dynamic>?;
 
-            UserProvider userProvider = Provider.of(context, listen: true);
+            if (data != null) {
+              UserModel user = UserModel();
 
-            user.setUid(data['uid']);
-            user.setEmail(data['email']);
-            user.setPhotoURL(data['photoURL']);
-            user.setSignInMethod(data['signInMethod']);
+              UserProvider userProvider = Provider.of(context, listen: true);
 
-            userProvider.setUser(user);
+              user.setUid(data['uid']);
+              user.setEmail(data['email']);
+              user.setPhotoURL(data['photoURL']);
+              user.setSignInMethod(data['signInMethod']);
 
-            if (data.containsKey("username") &&
-                data['username'].toString().isNotEmpty) {
-              user.setUsername(data['username']);
-              return const MainPage();
-            } else {
-              return const InsertUsernamePage();
+              userProvider.setUser(user);
+
+              if (data.containsKey("username") &&
+                  data['username'].toString().isNotEmpty) {
+                user.setUsername(data['username']);
+                return const MainPage();
+              } else {
+                return const InsertUsernamePage();
+              }
             }
           }
           return const Center(child: CircularProgressIndicator());
