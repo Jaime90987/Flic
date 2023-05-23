@@ -8,13 +8,21 @@ import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late bool isLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.grey,
                         ),
                         textAlign: TextAlign.center,
-                      )
+                      ),
                     ],
                   ),
                 );
@@ -85,65 +93,108 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   final currentPost = posts[index];
                   return Card(
-                    child: ListTile(
-                      leading: ProfileImage(
-                        image: currentPost['photoURL'].toString(),
-                        width: 40,
-                        height: 40,
-                      ),
-                      title: Container(
-                        margin: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                currentPost['username'],
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: ProfileImage(
+                            image: currentPost['photoURL'].toString(),
+                            width: 40,
+                            height: 40,
+                          ),
+                          title: Container(
+                            margin: const EdgeInsets.only(top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    currentPost['username'],
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Text(
+                                  getFormattedDate(currentPost["timestamp"]),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ],
                             ),
-                            Text(
-                              getFormattedDate(currentPost["timestamp"]),
-                              textAlign: TextAlign.right,
-                            ),
-                          ],
+                          ),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 5),
+                              if (currentPost['message'].toString().isNotEmpty)
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    currentPost['message'],
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              const SizedBox(height: 10),
+                              if (currentPost['image'].toString() != "")
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CachedNetworkImage(
+                                    maxHeightDiskCache: 2000,
+                                    imageUrl: currentPost['image'],
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey,
+                                      height: 250,
+                                      width: MediaQuery.of(context).size.width,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                      subtitle: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-                          if (currentPost['message'].toString().isNotEmpty)
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                currentPost['message'],
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                              ),
-                            ),
-                          const SizedBox(height: 10),
-                          if (currentPost['image'].toString() != "")
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: CachedNetworkImage(
-                                maxHeightDiskCache: 2000,
-                                imageUrl: currentPost['image'],
-                                placeholder: (context, url) => Container(
-                                  color: Colors.grey,
-                                  height: 250,
-                                  width: MediaQuery.of(context).size.width,
+                        //SECCIÓN ME GUSTA Y COMENTARIOS
+                        Container(
+                          margin: const EdgeInsets.only(left: 60),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                    final currentPost = posts[index];
+                                    final postId = currentPost.id;
+                                    final postRef = FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(postId);
+                                    final newLikeCount = isLiked
+                                        ? currentPost['likes'] + 1
+                                        : currentPost['likes'] - 1;
+                                    postRef.update({'likes': newLikeCount});
+                                  });
+                                },
+                                icon: Icon(
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isLiked ? Colors.red : Colors.grey,
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
-                            ),
-                        ],
-                      ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.comment_outlined,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },

@@ -1,12 +1,9 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
-import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
-import 'package:proyecto_flic/services/google_auth.dart';
-import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/user_search.dart';
@@ -25,8 +22,6 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.watch<UserProvider>().user;
-    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,28 +32,19 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        leading: Center(
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const FaIcon(
+              FontAwesomeIcons.arrowLeft,
+              color: Colors.black,
+              semanticLabel: "Go Back",
+            ),
+          ),
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              if (value == "logout") {
-                if (currentUser.signInMethod.toString() == "google") {
-                  GoogleAuth.signOutGoogle();
-                } else {
-                  Auth.signOut();
-                }
-              }
-            },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(
-                value: "logout",
-                child: Text("Cerrar sesión"),
-              ),
-            ],
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -114,7 +100,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                               ),
                             ),
                             const Text(
-                              "Aún no has hecho ninguna publicación.",
+                              "Aún no hay ninguna publicación.",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20,
@@ -246,5 +232,3 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
     );
   }
 }
-
-
