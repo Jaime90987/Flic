@@ -1,12 +1,16 @@
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_flic/models/user_search.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
+import 'package:proyecto_flic/pages/other_profile_page.dart';
+
+
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
+  
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -53,6 +57,15 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  void navigateToOtherProfilePage(UserSearch user) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OtherProfilePage(user: user),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
               itemBuilder: (context, index) {
                 final user = filteredUsers[index];
                 return ListTile(
-                  onTap: () => log(user.username),
+                  onTap: () => navigateToOtherProfilePage(user),
                   leading:
                       ProfileImage(image: user.photoURL, width: 40, height: 40),
                   title: Text(user.username),
@@ -108,3 +121,4 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
