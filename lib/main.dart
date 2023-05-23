@@ -17,6 +17,10 @@ Future main() async {
     ),
   );
 
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => UserProvider(),

@@ -2,9 +2,8 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
-import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
@@ -33,10 +32,14 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Container(
             margin: const EdgeInsets.fromLTRB(0, 12, 15, 12),
-            child: ProfileImage(
-              image: context.read<UserProvider>().user.photoURL ?? "",
-              width: 33,
-              height: 33,
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, "/chats"),
+              child: const FaIcon(
+                FontAwesomeIcons.solidMessage,
+                color: AppColors.primary,
+                semanticLabel: "Go to Chats",
+              ),
             ),
           ),
         ],
@@ -97,8 +100,8 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 currentPost['username'],
                                 style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),

@@ -35,7 +35,7 @@ class GoogleAuth {
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
+      log("Erorr: ${e.message}");
       return null;
     }
   }

@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_flic/pages/edit_profile_page.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
+import 'package:proyecto_flic/pages/widgets/profile_page/modal_post_options.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/services/google_auth.dart';
@@ -18,10 +20,31 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int postsNumber = 0;
-
   @override
   Widget build(BuildContext context) {
+    final photoURL = context.watch<UserProvider>().user.photoURL.toString();
+    final postsNumber =
+        context.watch<UserProvider>().user.postsNumber.toString();
+
+    final name = context.watch<UserProvider>().user.name.toString();
+    final bio = context.watch<UserProvider>().user.bio.toString();
+
+    void showFullScreenImage() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.black54,
+            ),
+            backgroundColor: Colors.black54,
+            body: PhotoView(imageProvider: NetworkImage(photoURL)),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,14 +60,10 @@ class _ProfilePageState extends State<ProfilePage> {
         foregroundColor: Colors.black,
         actions: [
           PopupMenuButton(
+            icon: const FaIcon(FontAwesomeIcons.bars),
             onSelected: (value) {
               if (value == "edit") {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditProfilePage(),
-                  ),
-                );
+                Navigator.pushNamed(context, "/edit_profile");
               } else if (value == "logout") {
                 if (context.read<UserProvider>().user.signInMethod.toString() ==
                     "google") {
@@ -65,20 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          // GestureDetector(
-          //   child: Container(
-          //     margin: const EdgeInsets.only(right: 12),
-          //     child: const Icon(Icons.settings, size: 30),
-          //   ),
-          //   onTap: () {
-          //     if (context.read<UserProvider>().user.signInMethod.toString() ==
-          //         "google") {
-          //       GoogleAuth.signOutGoogle();
-          //     } else {
-          //       Auth.signOut();
-          //     }
-          //   },
-          // ),
         ],
       ),
       body: SafeArea(
@@ -89,13 +94,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                    child: ProfileImage(
-                      image:
-                          context.read<UserProvider>().user.photoURL.toString(),
-                      width: 77,
-                      height: 77,
+                  GestureDetector(
+                    onTap: showFullScreenImage,
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(20, 8, 0, 0),
+                      child: ProfileImage(
+                        image: photoURL,
+                        width: 77,
+                        height: 77,
+                      ),
                     ),
                   ),
                   Container(
@@ -112,6 +119,37 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
+              if (name != "" || bio != "")
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(20, 5, 20, 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (name != "")
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            const SizedBox(height: 5),
+                            if (bio != "")
+                              Text(
+                                bio,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('posts')
@@ -171,8 +209,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text(
                                       currentPost['username'],
                                       style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -180,6 +218,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     getFormattedDate(currentPost["timestamp"]),
                                     textAlign: TextAlign.right,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return ModalPostOptions(
+                                            postId: currentPost.id.toString(),
+                                            message: currentPost["message"]
+                                                .toString(),
+                                            imageURL:
+                                                currentPost["image"].toString(),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Icon(Icons.more_vert),
                                   ),
                                 ],
                               ),
@@ -196,7 +251,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text(
                                       currentPost['message'],
                                       style: const TextStyle(
-                                          color: Colors.black, fontSize: 16),
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
                                 const SizedBox(height: 10),

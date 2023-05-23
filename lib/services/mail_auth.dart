@@ -91,7 +91,7 @@ class Auth {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      log(e.message.toString());
+      log("Erorr: ${e.message}");
       navigatorKey.currentState!.pop();
     }
   }

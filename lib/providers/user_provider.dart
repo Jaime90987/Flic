@@ -8,10 +8,29 @@ class UserProvider with ChangeNotifier {
 
   void setUser(UserModel user) {
     _user = user;
-    // notifyListeners();
   }
 
   void setUsername(String username) {
     _user.setUsername(username);
+  }
+
+  void setName(String name) {
+    _user.setName(name);
+    notifyListeners();
+  }
+
+  void setBio(String bio) {
+    _user.setBio(bio);
+    notifyListeners();
+  }
+
+  void setPhotoURL(String photoURL) {
+    _user.setPhotoURL(photoURL);
+    notifyListeners();
+  }
+
+  void setPostsNumber(int postsNumber) {
+    _user.setPostsNumber(postsNumber);
+    notifyListeners();
   }
 }

@@ -15,7 +15,7 @@ class AppStrings {
   static const passwordTextLabel = 'Contraseña';
   static const confirmPasswordTextLabel = 'Confirmar contraseña';
   static const passwordLeghtText =
-      'La contraseña debe tener al menos 6 dígitos';
+      'La contraseña debe tener al menos 6 caracteres';
   static const requiredFieldText = 'Campo requerido';
 
   //Social Networks

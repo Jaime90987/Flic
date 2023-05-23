@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:proyecto_flic/services/image_size_getter.dart';
 
-Future<Map<String, dynamic>> getValues(File? imageToUpload) async {
+Future<Map<String, dynamic>> getValues(File? image) async {
   double width = 1;
   double height = 1;
 
-  final ImagePicker picker = ImagePicker();
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-  imageToUpload = File(image!.path);
+  if (image == null) return {"width": null, "height": null, "image": image};
 
   double aspectRatio = getImageAspectRatio(image.path);
   final rotate = getImageRotate(image.path);
@@ -32,5 +29,5 @@ Future<Map<String, dynamic>> getValues(File? imageToUpload) async {
     height = 0.9;
   }
 
-  return {"width": width, "height": height, "image": imageToUpload};
+  return {"width": width, "height": height, "image": image};
 }

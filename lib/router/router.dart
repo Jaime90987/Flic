@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/pages/add_post_page.dart';
+import 'package:proyecto_flic/pages/chats_page.dart';
+import 'package:proyecto_flic/pages/edit_post_page.dart';
+import 'package:proyecto_flic/pages/edit_profile_page.dart';
 import 'package:proyecto_flic/pages/insert_username_page.dart';
 import 'package:proyecto_flic/pages/profile_page.dart';
 import 'package:proyecto_flic/pages/search_page.dart';
@@ -24,5 +27,8 @@ Map<String, WidgetBuilder> routes(GlobalKey<NavigatorState> navigatorKey) {
     '/search': (_) => const SearchPage(),
     '/profile': (_) => const ProfilePage(),
     '/addPost': (_) => AddPostPage(navigatorKey: navigatorKey),
+    '/chats': (_) => const ChatsPage(),
+    '/edit_profile': (_) => EditProfilePage(navigatorKey: navigatorKey),
+    '/edit_post': (_) => EditPostPage(navigatorKey: navigatorKey),
   };
 }

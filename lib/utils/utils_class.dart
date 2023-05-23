@@ -26,6 +26,34 @@ class Utils {
     );
   }
 
+  static showConfirmAlert(
+    BuildContext context,
+    GlobalKey<NavigatorState> navigatorKey,
+    String title,
+    String messageText,
+    String actionText1,
+    String actionText2,
+    VoidCallback function,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(messageText),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(actionText1),
+          ),
+          TextButton(
+            onPressed: function,
+            child: Text(actionText2),
+          ),
+        ],
+      ),
+    );
+  }
+
   static showLoadingCircle(BuildContext context) {
     showDialog(
       context: context,

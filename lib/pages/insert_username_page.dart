@@ -61,12 +61,14 @@ class _InsertUsernamePageState extends State<InsertUsernamePage> {
                 TextFormField(
                   controller: userNameController,
                   keyboardType: TextInputType.text,
+                  maxLength: 30,
                   decoration: const InputDecoration(
                     labelText: "Nombre de Usuario",
                     labelStyle: TextStyle(color: AppColors.primary),
                     filled: true,
                     fillColor: Colors.white,
                     helperText: "",
+                    counterText: "",
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.primary),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -95,22 +97,21 @@ class _InsertUsernamePageState extends State<InsertUsernamePage> {
                     if (value.toString().trim() == "" ||
                         value.toString().trim().isEmpty) {
                       return 'Por favor ingrese un nombre de usuario';
+                    } else if (value.toString().length < 4) {
+                      return 'El nombre de usuario debe tener al menos 4 caracteres';
                     } else if (!_usernameAvailable) {
                       return 'Este nombre de usuario ya está en uso';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 25),
                 SendButton(
                   text: "Aceptar",
                   function: () {
                     if (_formKey.currentState!.validate()) {
-                      saveUsername(
-                        Auth.user.uid,
-                        userNameController.text.trim(),
-                      );
                       context.read<UserProvider>().setUsername(_username);
+                      saveUsername(Auth.user.uid, _username);
                       Navigator.pushReplacementNamed(context, "/main");
                     }
                   },

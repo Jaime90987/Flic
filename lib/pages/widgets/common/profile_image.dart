@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flic/values/colors.dart';
 
 class ProfileImage extends StatelessWidget {
   final String image;
@@ -15,14 +14,14 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(100),
       child: image != ""
           ? Container(
               width: width,
               height: height,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.grey,
               ),
               child: Image.network(image, fit: BoxFit.cover),
             )
@@ -30,7 +29,7 @@ class ProfileImage extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: Image.asset("assets/images/avatar-none.png"),
             ),

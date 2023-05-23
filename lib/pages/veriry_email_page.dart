@@ -15,6 +15,7 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   bool isEmailVerified = false;
+  Timer? timer;
 
   @override
   void initState() {
@@ -25,11 +26,17 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (!isEmailVerified) {
       sendVerificationEmail();
 
-      Timer.periodic(
+      timer = Timer.periodic(
         const Duration(seconds: 3),
         (timer) => checkEmailVerification(),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   Future checkEmailVerification() async {

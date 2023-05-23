@@ -38,9 +38,12 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
               UserProvider userProvider = Provider.of(context, listen: true);
 
               user.setUid(data['uid']);
+              user.setName(data['name']);
               user.setEmail(data['email']);
               user.setPhotoURL(data['photoURL']);
               user.setSignInMethod(data['signInMethod']);
+              user.setBio(data['bio']);
+              user.setPostsNumber(data['postsNumber']);
 
               userProvider.setUser(user);
 
