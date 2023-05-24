@@ -97,6 +97,8 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final currentPost = posts[index];
+                  // final isLiked = currentPost['isLiked'] ?? false;
+
                   String photo = "";
 
                   if (currentPost['photoURL'].toString().isEmpty) {
@@ -183,23 +185,30 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  setState(() {
-                                    isLiked = !isLiked;
-                                    final currentPost = posts[index];
-                                    final postId = currentPost.id;
-                                    final postRef = FirebaseFirestore.instance
-                                        .collection('posts')
-                                        .doc(postId);
-                                    final newLikeCount = isLiked
-                                        ? currentPost['likes'] + 1
-                                        : currentPost['likes'] - 1;
-                                    postRef.update({'likes': newLikeCount});
-                                  });
+                                  // setState(() {
+                                  //   final currentPost = posts[index];
+                                  //   final postId = currentPost.id;
+                                  //   final postRef = FirebaseFirestore.instance
+                                  //       .collection('posts')
+                                  //       .doc(postId);
+
+                                  //   if (isLiked) {
+                                  //     postRef.update({
+                                  //       'likeCount':
+                                  //           (currentPost['likes'] ?? 0) - 1,
+                                  //       'isLiked': false,
+                                  //     });
+                                  //   } else {
+                                  //     postRef.update({
+                                  //       'likeCount':
+                                  //           (currentPost['likes'] ?? 0) + 1,
+                                  //       'isLiked': true,
+                                  //     });
+                                  //   }
+                                  // });
                                 },
                                 icon: Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
+                                  Icons.favorite,
                                   color: isLiked ? Colors.red : Colors.grey,
                                 ),
                               ),
@@ -207,7 +216,6 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {},
                                 icon: const Icon(
                                   Icons.comment_outlined,
-                                  color: Colors.grey,
                                 ),
                               ),
                             ],
