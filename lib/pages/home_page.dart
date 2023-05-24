@@ -2,8 +2,9 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
+import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
@@ -15,14 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late bool isLiked;
-
-  @override
-  void initState() {
-    super.initState();
-    isLiked = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,14 +33,10 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Container(
             margin: const EdgeInsets.fromLTRB(0, 12, 15, 12),
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, "/chats"),
-              child: const FaIcon(
-                FontAwesomeIcons.solidMessage,
-                color: AppColors.primary,
-                semanticLabel: "Go to Chats",
-              ),
+            child: ProfileImage(
+              image: context.read<UserProvider>().user.photoURL ?? "",
+              width: 33,
+              height: 33,
             ),
           ),
         ],
@@ -92,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final currentPost = posts[index];
+                  final isLiked = currentPost['isLiked'] ?? false;
                   return Card(
                     child: Column(
                       children: [
@@ -158,41 +148,44 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         //SECCIÓN ME GUSTA Y COMENTARIOS
-                        Container(
-                          margin: const EdgeInsets.only(left: 60),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isLiked = !isLiked;
-                                    final currentPost = posts[index];
-                                    final postId = currentPost.id;
-                                    final postRef = FirebaseFirestore.instance
-                                        .collection('posts')
-                                        .doc(postId);
-                                    final newLikeCount = isLiked
-                                        ? currentPost['likes'] + 1
-                                        : currentPost['likes'] - 1;
-                                    postRef.update({'likes': newLikeCount});
-                                  });
-                                },
-                                icon: Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: isLiked ? Colors.red : Colors.grey,
-                                ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  final currentPost = posts[index];
+                                  final postId = currentPost.id;
+                                  final postRef = FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(postId);
+
+                                  if (isLiked) {
+                                    postRef.update({
+                                      'likeCount':
+                                          (currentPost['likeCount'] ?? 0) - 1,
+                                      'isLiked': false,
+                                    });
+                                  } else {
+                                    postRef.update({
+                                      'likeCount':
+                                          (currentPost['likeCount'] ?? 0) + 1,
+                                      'isLiked': true,
+                                    });
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                Icons.favorite,
+                                color: isLiked ? Colors.red : Colors.grey,
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.comment_outlined,
-                                  color: Colors.grey,
-                                ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.comment_outlined,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
