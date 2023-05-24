@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/values/colors.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class MyDivider extends StatelessWidget {
   const MyDivider({super.key});
@@ -17,11 +16,11 @@ class MyDivider extends StatelessWidget {
         ),
         SizedBox(width: 3),
         Text(
-          AppStrings.orLoginWith,
+          " O ingresa con ",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Colors.black54,
+            color: Colors.white,
           ),
         ),
         SizedBox(width: 3),

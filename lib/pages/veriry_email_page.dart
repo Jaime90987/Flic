@@ -59,40 +59,33 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       ? const VerifyUsernamePage()
       : Scaffold(
           body: SafeArea(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF87CEFA),
-                        Color(0xFF6FD5E3),
-                        Color(0xFF7CFDE9),
+            child: SingleChildScrollView(
+              child: Stack(
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(40, 220, 40, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          "Se ha enviado un correo de verificación a tu email.",
+                          style: TextStyle(fontSize: 24),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 40),
+                        SendButton(
+                          text: "Cancelar",
+                          function: () => Auth.signOut(),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text(
-                        "Se ha enviado un correo de verificación a tu email.",
-                        style: TextStyle(fontSize: 24),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 40),
-                      SendButton(
-                        text: "Cancelar",
-                        function: () => Auth.signOut(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

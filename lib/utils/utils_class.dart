@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_flic/values/colors.dart';
 
 class Utils {
   static showAlert(
@@ -19,7 +20,14 @@ class Utils {
             onPressed: () => !isForgotPassoword
                 ? Navigator.pop(context)
                 : navigatorKey.currentState!.popUntil((route) => route.isFirst),
-            child: Text(actionText),
+            child: Text(
+              actionText,
+              style: const TextStyle(
+                fontSize: 18,
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -43,11 +51,21 @@ class Utils {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(actionText1),
+            child: Text(
+              actionText1,
+              style: const TextStyle(fontSize: 18, color: Color(0xFF14171A)),
+            ),
           ),
           TextButton(
             onPressed: function,
-            child: Text(actionText2),
+            child: Text(
+              actionText2,
+              style: const TextStyle(
+                fontSize: 18,
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -59,7 +77,7 @@ class Utils {
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: AppColors.primary),
       ),
     );
   }

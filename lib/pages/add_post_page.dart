@@ -11,6 +11,7 @@ import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/modal_image_options.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/services/select_image.dart';
@@ -90,8 +91,6 @@ class _AddPostPageState extends State<AddPostPage> {
     savePost() async {
       FocusScope.of(context).unfocus();
 
-      Utils.showLoadingCircle(context);
-
       if (messageController.text.toString().trim().isEmpty &&
           imageToUpload == null) {
         Utils.showAlert(
@@ -105,6 +104,8 @@ class _AddPostPageState extends State<AddPostPage> {
         return;
       }
 
+      Utils.showLoadingCircle(context);
+
       if (imageToUpload != null) {
         bool uploaded = await uploadImage(imageToUpload!);
         if (!uploaded) {
@@ -113,13 +114,23 @@ class _AddPostPageState extends State<AddPostPage> {
         }
       }
 
-      await addPost(
-        Auth.user.uid,
-        username,
-        photoURL,
-        messageController.text.toString().trim(),
-        imageToUpload != null ? getUrl() : "",
-      );
+      if (photoURL.isEmpty) {
+        await addPost(
+          Auth.user.uid,
+          username,
+          photoURL,
+          messageController.text.toString().trim(),
+          imageToUpload != null ? getUrl() : "",
+        );
+      } else {
+        await addPost(
+          Auth.user.uid,
+          username,
+          AESCryptor.encrypt(photoURL),
+          messageController.text.toString().trim(),
+          imageToUpload != null ? getUrl() : "",
+        );
+      }
 
       postsNumber += 1;
       savePostsNumber(Auth.user.uid, postsNumber);

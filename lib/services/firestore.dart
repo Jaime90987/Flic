@@ -1,7 +1,6 @@
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:proyecto_flic/models/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -10,7 +9,7 @@ Future<void> saveMailUserInfo(String? uid, String? email) async {
     "uid": uid,
     "username": "",
     "name": "",
-    "email": email,
+    "email": AESCryptor.encrypt(email.toString()),
     "bio": "",
     "photoURL": "",
     "signInMethod": "mail",
@@ -32,9 +31,9 @@ Future<void> saveGoogleUserInfo(
       "uid": uid,
       "username": "",
       "name": "",
-      "email": email,
+      "email": AESCryptor.encrypt(email.toString()),
       "bio": "",
-      "photoURL": photoURL,
+      "photoURL": AESCryptor.encrypt(photoURL.toString()),
       "signInMethod": "google",
       "postsNumber": 0,
     });
@@ -61,7 +60,7 @@ Future<void> saveBio(String? uid, String? bio) async {
 
 Future<void> savePhotoURL(String? uid, String? photoURL) async {
   await db.collection("users").doc(uid).update({
-    "photoURL": photoURL,
+    "photoURL": AESCryptor.encrypt(photoURL.toString()),
   });
 }
 
@@ -69,11 +68,12 @@ Future<void> updatePhotoURL(
     String uid, String odlPhotoURL, String newPhotoURL) async {
   QuerySnapshot querySnapshot = await db
       .collection("posts")
-      .where("photoURL", isEqualTo: odlPhotoURL)
-      .get();
+      .where("photoURL", whereIn: [odlPhotoURL, ""]).get();
 
   for (var doc in querySnapshot.docs) {
-    db.collection("posts").doc(doc.id).update({'photoURL': newPhotoURL});
+    db.collection("posts").doc(doc.id).update({
+      'photoURL': AESCryptor.encrypt(newPhotoURL.toString()),
+    });
   }
 }
 
@@ -81,45 +81,6 @@ Future<void> savePostsNumber(String? uid, int postsNumber) async {
   await db.collection("users").doc(uid).update({
     "postsNumber": postsNumber,
   });
-}
-
-Future<UserModel> getUserinfo(String uid) async {
-  DocumentSnapshot snapshot = await db.collection("users").doc(uid).get();
-
-  if (snapshot.exists && snapshot.data() != null) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    UserModel user = UserModel(
-      uid: data['uid'] as String,
-      username: data['username'] as String,
-      email: data['email'] as String,
-      photoURL: data['photoURL'] as String,
-      bio: data['bio'] as String,
-      signInMethod: data['signInMethod'] as String,
-    );
-
-    return user;
-  } else {
-    throw StateError('No se encontró el documento o no se cargaron los datos');
-  }
-}
-
-Future<String?> getUsernameFromFirestore(String uid) async {
-  try {
-    DocumentSnapshot documentSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    if (documentSnapshot.exists) {
-      Map<String, dynamic> data =
-          documentSnapshot.data() as Map<String, dynamic>;
-      String? username = data['username'] as String?;
-      return username;
-    } else {
-      return null;
-    }
-  } catch (e) {
-    log('Error retrieving username from Firestore: $e');
-    return null;
-  }
 }
 
 Future<bool> checkUsernameAvailability(String? username) async {
@@ -157,7 +118,7 @@ Future<void> updatePost(
   await db.collection("posts").doc(id).update({
     "uid": uid,
     "username": username,
-    "photoURL": photoURL,
+    "photoURL": AESCryptor.encrypt(photoURL.toString()),
     "message": mesasage,
     "image": image,
     "likes": 0,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:proyecto_flic/values/colors.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class InputEmail extends StatelessWidget {
   final TextEditingController emailController;
@@ -20,7 +19,7 @@ class InputEmail extends StatelessWidget {
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        labelText: AppStrings.emailTextLabel,
+        labelText: "Correo Electrónico",
         labelStyle: TextStyle(color: AppColors.primary),
         filled: true,
         fillColor: Colors.white,
@@ -46,10 +45,10 @@ class InputEmail extends StatelessWidget {
       ),
       validator: (String? value) {
         if (value == null || value.trim().isEmpty) {
-          return AppStrings.requiredFieldText;
+          return "Campo requerido";
         }
         if (!EmailValidator.validate(value.trim())) {
-          return AppStrings.invalidEmail;
+          return "Por favor introduce un correo válido";
         }
         return null;
       },

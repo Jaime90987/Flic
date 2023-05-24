@@ -7,10 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/pages/widgets/profile_page/modal_post_options.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/services/google_auth.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_flic/values/colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -29,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final name = context.watch<UserProvider>().user.name.toString();
     final bio = context.watch<UserProvider>().user.bio.toString();
 
-    void showFullScreenImage() {
+    void showFullScreenImage(String image) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -39,13 +41,14 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: Colors.black54,
             ),
             backgroundColor: Colors.black54,
-            body: PhotoView(imageProvider: NetworkImage(photoURL)),
+            body: PhotoView(imageProvider: NetworkImage(image)),
           ),
         ),
       );
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           context.read<UserProvider>().user.username.toString(),
@@ -56,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         actions: [
           PopupMenuButton(
@@ -95,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: showFullScreenImage,
+                    onTap: () => showFullScreenImage(photoURL),
                     child: Container(
                       margin: const EdgeInsets.fromLTRB(20, 8, 0, 0),
                       child: ProfileImage(
@@ -192,10 +195,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final currentPost = posts[index];
+                        String photo = "";
+
+                        if (currentPost['photoURL'].toString().isEmpty) {
+                          photo = currentPost['photoURL'];
+                        } else {
+                          photo = AESCryptor.decrypt(
+                              currentPost['photoURL'].toString());
+                        }
+
                         return Card(
                           child: ListTile(
                             leading: ProfileImage(
-                              image: currentPost["photoURL"],
+                              image: photo,
                               width: 40,
                               height: 40,
                             ),
@@ -258,18 +270,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 const SizedBox(height: 10),
                                 if (currentPost['image'].toString() != "")
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: CachedNetworkImage(
-                                      imageUrl: currentPost['image'],
-                                      placeholder: (context, url) => Container(
-                                        color: Colors.grey,
-                                        height: 250,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                  GestureDetector(
+                                    onTap: () => showFullScreenImage(
+                                        currentPost['image'].toString()),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: CachedNetworkImage(
+                                        imageUrl: currentPost['image'],
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          color: Colors.grey,
+                                          height: 250,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
                                     ),
                                   ),
                                 const SizedBox(height: 10),
@@ -284,7 +301,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     return Container(
                       margin: const EdgeInsets.only(top: 200),
                       child: const Center(
-                        child: CircularProgressIndicator(),
+                        child:
+                            CircularProgressIndicator(color: AppColors.primary),
                       ),
                     );
                   } else if (snapshot.hasError) {

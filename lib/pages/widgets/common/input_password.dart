@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/values/colors.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class InputPassword extends StatefulWidget {
   final TextEditingController passwordController;
@@ -59,10 +58,10 @@ class _InputPasswordState extends State<InputPassword> {
       ),
       validator: (String? value) {
         if (value == null || value.trim().isEmpty) {
-          return AppStrings.requiredFieldText;
+          return "Campo requerido";
         }
         if (value.length < 6) {
-          return AppStrings.passwordLeghtText;
+          return "La contraseña debe tener al menos 6 caracteres";
         }
         return null;
       },

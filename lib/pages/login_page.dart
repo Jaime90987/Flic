@@ -5,11 +5,11 @@ import 'package:proyecto_flic/pages/widgets/common/footer.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_password.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
+import 'package:proyecto_flic/pages/widgets/login_page/clip_path_login.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/divider.dart';
 import 'package:proyecto_flic/pages/widgets/login_page/forgot_password_message.dart';
 import 'package:proyecto_flic/services/google_auth.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class LoginPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -36,29 +36,21 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF87CEFA),
-                    Color(0xFF6FD5E3),
-                    Color(0xFF7CFDE9),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: <Widget>[
+              const MyClipPathLogin(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
               ),
-            ),
-            SingleChildScrollView(
-              child: Container(
+              Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
-                    Image.asset(AppStrings.loginImage, height: 150),
+                    const SizedBox(height: 20),
+                    Image.asset("assets/images/loginImage.png", height: 120),
                     const SizedBox(height: 25),
                     Form(
                       key: _formKey,
@@ -68,13 +60,13 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 16),
                           InputPassword(
                             passwordController: passwordController,
-                            labelText: AppStrings.passwordTextLabel,
+                            labelText: "Contraseña",
                           ),
                           const SizedBox(height: 12),
                           const ForgotPasswordMessage(),
                           const SizedBox(height: 40),
                           SendButton(
-                            text: AppStrings.loginText,
+                            text: "Iniciar sesión",
                             function: () {
                               if (_formKey.currentState!.validate()) {
                                 Auth.signInWithEmailAndPassword(
@@ -111,9 +103,9 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SvgPicture.asset(
-                                  AppStrings.socialImage1,
+                                  "assets/icons/google.svg",
                                   height: 32,
-                                  semanticsLabel: AppStrings.socialText1,
+                                  semanticsLabel: "Google",
                                 ),
                                 const SizedBox(width: 15),
                                 const Text(
@@ -129,8 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 22),
                           Footer(
-                            message: AppStrings.dontHaveAnAccountYet,
-                            message2: AppStrings.registerHere,
+                            message: "¿Aún no tienes una cuenta?",
+                            message2: "Registrate aquí",
                             function: () =>
                                 Navigator.pushNamed(context, "/register"),
                           ),
@@ -141,8 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

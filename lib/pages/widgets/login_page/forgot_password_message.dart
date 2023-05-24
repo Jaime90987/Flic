@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/values/colors.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class ForgotPasswordMessage extends StatelessWidget {
   const ForgotPasswordMessage({super.key});
@@ -13,7 +12,7 @@ class ForgotPasswordMessage extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).pushNamed("/forgot_password"),
           child: const Text(
-            AppStrings.forgotPassword,
+            "¿Olvido su contraseña?",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,

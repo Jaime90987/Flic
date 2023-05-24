@@ -1,9 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/values/colors.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class InputUsername extends StatelessWidget {
   final TextEditingController emailController;
@@ -48,7 +46,7 @@ class InputUsername extends StatelessWidget {
       ),
       validator: (String? value) {
         if (value == null || value.trim().isEmpty) {
-          return AppStrings.requiredFieldText;
+          return "Campo requerido";
         }
         checkUsernameAvailability(value)
             .then((boleano) => isAvailable = boleano);

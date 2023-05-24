@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/router/router.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +11,7 @@ Future main() async {
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
+      statusBarColor: Color(0xFF081F18),
       systemNavigationBarColor: Colors.black,
     ),
   );
@@ -39,11 +38,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: AppStrings.title,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      title: "FLIC",
       themeMode: ThemeMode.light,
-      initialRoute: AppStrings.initialRoute,
+      initialRoute: "/",
       routes: routes(navigatorKey),
     );
   }

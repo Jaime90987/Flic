@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/input_email.dart';
 import 'package:proyecto_flic/pages/widgets/common/send_button.dart';
+import 'package:proyecto_flic/pages/widgets/forgot_password_page/clip_path_forgot_password.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/utils/utils_class.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -31,18 +31,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         child: SingleChildScrollView(
           child: Stack(
             children: <Widget>[
-              Container(
+              const MyClipPathForgotPassword(),
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF87CEFA),
-                      Color(0xFF6FD5E3),
-                      Color(0xFF7CFDE9),
-                    ],
-                  ),
-                ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -51,10 +43,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset(AppStrings.loginImage, height: 150),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
+                      Image.asset("assets/images/loginImage.png", height: 120),
+                      const SizedBox(height: 25),
                       InputEmail(emailController: emailController),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 70),
                       SendButton(
                         text: "Enviar",
                         function: () {

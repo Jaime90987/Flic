@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
 import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
+import 'package:proyecto_flic/values/colors.dart';
 
 class ModalPostOptions extends StatelessWidget {
   final String postId;
@@ -42,7 +43,13 @@ class ModalPostOptions extends StatelessWidget {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancelar"),
+                          child: const Text(
+                            "Cancelar",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Color(0xFF14171A),
+                            ),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -54,7 +61,14 @@ class ModalPostOptions extends StatelessWidget {
                                 .setPostsNumber(postsNumber);
                             savePostsNumber(Auth.user.uid, postsNumber);
                           },
-                          child: const Text("Eliminar"),
+                          child: const Text(
+                            "Eliminar",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -67,7 +81,7 @@ class ModalPostOptions extends StatelessWidget {
                     FaIcon(
                       FontAwesomeIcons.trash,
                       size: 25,
-                      color: Color(0xFF657786),
+                      color: AppColors.primary,
                     ),
                     SizedBox(width: 15),
                     Text(
@@ -97,7 +111,7 @@ class ModalPostOptions extends StatelessWidget {
                     FaIcon(
                       FontAwesomeIcons.pen,
                       size: 25,
-                      color: Color(0xFF657786),
+                      color: AppColors.primary,
                     ),
                     SizedBox(width: 15),
                     Text(

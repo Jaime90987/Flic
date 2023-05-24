@@ -38,7 +38,7 @@ class MainPageState extends State<MainPage> {
         showUnselectedLabels: false,
         currentIndex: _currentPage,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xFFBA9FEE),
+        unselectedItemColor: const Color(0xFF6AD3B5),
         items: [
           const BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.house),

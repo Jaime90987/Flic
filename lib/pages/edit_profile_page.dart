@@ -10,6 +10,7 @@ import 'package:proyecto_flic/main.dart';
 import 'package:proyecto_flic/pages/widgets/common/modal_image_options.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 import 'package:proyecto_flic/services/firestore.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
 import 'package:proyecto_flic/services/storage.dart';
@@ -31,6 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void dispose() {
     imageToUpload = null;
+    where = "";
     super.dispose();
   }
 
@@ -81,7 +83,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           return;
         }
         await savePhotoURL(Auth.user.uid, getUrl());
-        updatePhotoURL(Auth.user.uid, actualPhotoURL, getUrl());
+
+        if (actualPhotoURL.isEmpty) {
+          updatePhotoURL(Auth.user.uid, actualPhotoURL, getUrl());
+        } else {
+          updatePhotoURL(
+              Auth.user.uid, AESCryptor.encrypt(actualPhotoURL), getUrl());
+        }
+
         actualPhotoURL = getUrl();
         updateProvider();
       }
@@ -226,7 +235,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 onTap: saveChanges,
                 child: const FaIcon(
                   FontAwesomeIcons.check,
-                  color: Colors.blueAccent,
+                  color: AppColors.primary,
                 ),
               ),
             ),

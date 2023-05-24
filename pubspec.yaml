@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.7.0
+  flutter_custom_clippers: ^2.1.0
   email_validator: ^2.1.17
   firebase_core: ^2.12.0
   firebase_storage: ^11.2.0
@@ -49,6 +50,8 @@ dependencies:
   intl: ^0.18.1
   photo_view: ^0.14.0
   provider: ^6.0.5
+  crypto: ^3.0.3
+  encrypt: ^5.0.1
 
 flutter_native_splash:
   android: true
@@ -56,9 +59,9 @@ flutter_native_splash:
   web: true
   fullscreen: true
 
-  color: "#87CEFA"
+  color: "#F7F7F7"
   image: "assets/images/splash.png"
-  color_dark: "#87CEFA"
+  color_dark: "#F7F7F7"
   image_dark: "assets/images/splash.png"
 
 dev_dependencies:

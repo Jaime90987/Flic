@@ -5,7 +5,9 @@ import 'package:proyecto_flic/models/user.dart';
 import 'package:proyecto_flic/pages/insert_username_page.dart';
 import 'package:proyecto_flic/pages/main_page.dart';
 import 'package:proyecto_flic/providers/user_provider.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 import 'package:proyecto_flic/services/mail_auth.dart';
+import 'package:proyecto_flic/values/colors.dart';
 
 class VerifyUsernamePage extends StatefulWidget {
   const VerifyUsernamePage({super.key});
@@ -26,7 +28,8 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary));
           } else if (snapshot.hasError) {
             return const Center(child: Text("Algo salio mal..."));
           } else if (snapshot.hasData) {
@@ -39,8 +42,14 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
 
               user.setUid(data['uid']);
               user.setName(data['name']);
-              user.setEmail(data['email']);
-              user.setPhotoURL(data['photoURL']);
+              user.setEmail(AESCryptor.decrypt(data['email']));
+
+              if (data["photoURL"].toString().isEmpty) {
+                user.setPhotoURL(data['photoURL']);
+              } else {
+                user.setPhotoURL(AESCryptor.decrypt(data['photoURL']));
+              }
+
               user.setSignInMethod(data['signInMethod']);
               user.setBio(data['bio']);
               user.setPostsNumber(data['postsNumber']);
@@ -56,7 +65,8 @@ class _VerifyUsernamePageState extends State<VerifyUsernamePage> {
               }
             }
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(color: AppColors.primary));
         },
       ),
     );

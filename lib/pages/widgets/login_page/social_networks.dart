@@ -1,8 +1,6 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:proyecto_flic/services/google_auth.dart';
-import 'package:proyecto_flic/values/strings.dart';
 
 class SocialNetworks extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -13,8 +11,7 @@ class SocialNetworks extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _socialNetworkTemplate(
-            AppStrings.socialImage1, AppStrings.socialText1, context),
+        _socialNetworkTemplate("assets/icons/google.svg", "Google", context),
       ],
     );
   }

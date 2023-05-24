@@ -2,8 +2,9 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:proyecto_flic/pages/widgets/common/profile_image.dart';
+import 'package:proyecto_flic/services/aes_crytor.dart';
 import 'package:proyecto_flic/services/formated_date.dart';
 import 'package:proyecto_flic/values/colors.dart';
 
@@ -23,9 +24,26 @@ class _HomePageState extends State<HomePage> {
     isLiked = false;
   }
 
+  void showFullScreenImage(String image) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: Colors.black54,
+          ),
+          backgroundColor: Colors.black54,
+          body: PhotoView(imageProvider: NetworkImage(image)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
@@ -34,23 +52,10 @@ class _HomePageState extends State<HomePage> {
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 23,
+            letterSpacing: 2.5,
           ),
         ),
         elevation: 0,
-        actions: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 12, 15, 12),
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, "/chats"),
-              child: const FaIcon(
-                FontAwesomeIcons.solidMessage,
-                color: AppColors.primary,
-                semanticLabel: "Go to Chats",
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: StreamBuilder(
@@ -92,12 +97,21 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final currentPost = posts[index];
+                  String photo = "";
+
+                  if (currentPost['photoURL'].toString().isEmpty) {
+                    photo = currentPost['photoURL'];
+                  } else {
+                    photo =
+                        AESCryptor.decrypt(currentPost['photoURL'].toString());
+                  }
+
                   return Card(
                     child: Column(
                       children: [
                         ListTile(
                           leading: ProfileImage(
-                            image: currentPost['photoURL'].toString(),
+                            image: photo,
                             width: 40,
                             height: 40,
                           ),
@@ -140,18 +154,23 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               const SizedBox(height: 10),
                               if (currentPost['image'].toString() != "")
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(
-                                    maxHeightDiskCache: 2000,
-                                    imageUrl: currentPost['image'],
-                                    placeholder: (context, url) => Container(
-                                      color: Colors.grey,
-                                      height: 250,
-                                      width: MediaQuery.of(context).size.width,
+                                GestureDetector(
+                                  onTap: () => showFullScreenImage(
+                                      currentPost['image'].toString()),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: CachedNetworkImage(
+                                      maxHeightDiskCache: 2000,
+                                      imageUrl: currentPost['image'],
+                                      placeholder: (context, url) => Container(
+                                        color: Colors.grey,
+                                        height: 250,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
                                   ),
                                 ),
                             ],
@@ -200,7 +219,8 @@ class _HomePageState extends State<HomePage> {
                 },
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primary));
             } else if (snapshot.hasError) {
               log(snapshot.error.toString());
               return Text('Error: ${snapshot.error}');
