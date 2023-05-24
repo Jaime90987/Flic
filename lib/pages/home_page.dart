@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final currentPost = posts[index];
-                  // final isLiked = currentPost['isLiked'] ?? false;
+                  final isLiked = currentPost['isLiked'] ?? false;
 
                   String photo = "";
 
@@ -185,27 +185,27 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  // setState(() {
-                                  //   final currentPost = posts[index];
-                                  //   final postId = currentPost.id;
-                                  //   final postRef = FirebaseFirestore.instance
-                                  //       .collection('posts')
-                                  //       .doc(postId);
+                                  setState(() {
+                                    final currentPost = posts[index];
+                                    final postId = currentPost.id;
+                                    final postRef = FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(postId);
 
-                                  //   if (isLiked) {
-                                  //     postRef.update({
-                                  //       'likeCount':
-                                  //           (currentPost['likes'] ?? 0) - 1,
-                                  //       'isLiked': false,
-                                  //     });
-                                  //   } else {
-                                  //     postRef.update({
-                                  //       'likeCount':
-                                  //           (currentPost['likes'] ?? 0) + 1,
-                                  //       'isLiked': true,
-                                  //     });
-                                  //   }
-                                  // });
+                                    if (isLiked) {
+                                      postRef.update({
+                                        'likes':
+                                            (currentPost['likes'] ?? 0) - 1,
+                                        'isLiked': false,
+                                      });
+                                    } else {
+                                      postRef.update({
+                                        'likes':
+                                            (currentPost['likes'] ?? 0) + 1,
+                                        'isLiked': true,
+                                      });
+                                    }
+                                  });
                                 },
                                 icon: Icon(
                                   Icons.favorite,

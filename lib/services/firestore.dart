@@ -103,6 +103,7 @@ Future<void> addPost(
     "message": mesasage,
     "image": image,
     "likes": 0,
+    "isLiked": false,
     "timestamp": Timestamp.now(),
   });
 }
@@ -121,7 +122,6 @@ Future<void> updatePost(
     "photoURL": AESCryptor.encrypt(photoURL.toString()),
     "message": mesasage,
     "image": image,
-    "likes": 0,
     "timestamp": Timestamp.now(),
   });
 }

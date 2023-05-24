@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 22),
                           Footer(
                             message: "¿Aún no tienes una cuenta?",
-                            message2: "Registrate aquí",
+                            message2: "Regístrate aquí",
                             function: () =>
                                 Navigator.pushNamed(context, "/register"),
                           ),
